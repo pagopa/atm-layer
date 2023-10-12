@@ -1,4 +1,4 @@
-name: Manual build and Deploy on env
+name: Manual build and Deploy
 
 on:
   workflow_dispatch:
@@ -22,13 +22,13 @@ permissions:
   contents: read    # This is required for actions/checkout
 
 jobs:
-  build:
+  manual-build:
     strategy:
       matrix:
         # environment: [dev, uat, prod]
         environment: ["${{ inputs.environment }}"]
 
-    name: "build"
+    name: "manual-build"
     runs-on: ubuntu-latest
 
     steps:
