@@ -12,6 +12,11 @@ on:
         - dev
         - uat
         - prod
+  push:
+    branches:
+      - '**'        
+      - '!main'     
+      - '!master'    
 
 defaults:
   run:
@@ -23,9 +28,9 @@ permissions:
 
 jobs:
   manual-build:
+    if: github.event_name == 'workflow_dispatch'
     strategy:
       matrix:
-        # environment: [dev, uat, prod]
         environment: ["${{ inputs.environment }}"]
 
     name: "manual-build"
