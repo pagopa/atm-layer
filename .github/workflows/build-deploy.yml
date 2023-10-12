@@ -1,9 +1,10 @@
-name: Manual build and Deploy
+
+name: Manual workflow
 
 on:
   workflow_dispatch:
     inputs:
-      environment:
+      env:
         description: 'Which environment to update.'
         type: choice
         required: true
@@ -26,7 +27,7 @@ jobs:
     if: github.event_name == 'workflow_dispatch'
     strategy:
       matrix:
-        environment: ["${{ inputs.environment }}"]
+        environment: ["${{ inputs.env }}"]
 
     name: "manual-build"
     runs-on: ubuntu-latest
@@ -68,7 +69,7 @@ jobs:
         run: |
           helm upgrade --install ${{ vars.HELM_CHART_NAME }} ${{ vars.HELM_CHART_FOLDER }}/ \
           --namespace ${{ vars.KUBE_NAMESPACE }} \
-          -f helm-chart/environments/values-${{ inputs.environment }}.yaml \
+          -f helm-chart/environments/values-${{ inputs.env }}.yaml \
           --set image.tag=${{ github.sha }} \
           --set image.repository=${{ steps.login-ecr.outputs.registry }}/${{ vars.DOCKER_IMAGE_NAME}} \
           --set serviceAccount.name=${{ vars.DOCKER_IMAGE_NAME}} \
