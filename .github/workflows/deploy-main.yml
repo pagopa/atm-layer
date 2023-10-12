@@ -23,7 +23,6 @@ permissions:
 
 jobs:
   build:
-    if: ${{ github.event_name == 'workflow_dispatch' }}
     strategy:
       matrix:
         # environment: [dev, uat, prod]
