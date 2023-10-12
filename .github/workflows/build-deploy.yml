@@ -12,11 +12,6 @@ on:
         - dev
         - uat
         - prod
-  push:
-    branches:
-      - '**'        
-      - '!main'     
-      - '!master'    
 
 defaults:
   run:
