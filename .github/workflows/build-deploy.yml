@@ -26,7 +26,7 @@ jobs:
     if: github.event_name == 'workflow_dispatch'
     strategy:
       matrix:
-        environment: ${{ inputs.env }}
+        environment: [${{ inputs.env }}]
 
     name: "manual-build"
     runs-on: ubuntu-latest
