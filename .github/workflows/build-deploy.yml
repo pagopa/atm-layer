@@ -1,4 +1,4 @@
-name: Manual workflow
+name: Manual build and deploy
 
 on:
   workflow_dispatch:
@@ -56,7 +56,7 @@ jobs:
 
       - name: Update Kubernetes Config
         run: |
-          aws eks --region ${{ vars.AWS_REGION }} update-kubeconfig --name ${{ vars.EKS_CLUSTER_NAME }}
+          aws eks --region ${{ vars.AWS_REGION }} update-kubeconfig --name pagopa-dev-atm-layer-eks
 
       - name: Install Helm
         run: |
@@ -66,11 +66,9 @@ jobs:
           
       - name: Upgrade Helm Chart
         run: |
-          helm upgrade --install ${{ vars.HELM_CHART_NAME }} ${{ vars.HELM_CHART_FOLDER }}/ \
-          --namespace ${{ vars.KUBE_NAMESPACE }} \
+          helm upgrade --install ${{ vars.DOCKER_IMAGE_NAME }} helm-chart/ \
+          --namespace pagopa \
           -f helm-chart/environments/values-${{ inputs.env }}.yaml \
           --set image.tag=${{ github.sha }} \
-          --set image.repository=${{ steps.login-ecr.outputs.registry }}/${{ vars.DOCKER_IMAGE_NAME}} \
-          --set serviceAccount.name=${{ vars.DOCKER_IMAGE_NAME}} \
-          --set serviceAccount.namespace=${{ vars.KUBE_NAMESPACE }} \
-          --set ingress.hosts[0].paths[0].path=/${{ vars.DOCKER_IMAGE_NAME}}/
+          --set image.repository=${{ steps.login-ecr.outputs.registry }}/${{ vars.DOCKER_IMAGE_NAME }} \
+          --set serviceAccount.name=${{ vars.DOCKER_IMAGE_NAME }} 
