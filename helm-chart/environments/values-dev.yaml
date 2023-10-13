@@ -85,7 +85,6 @@ tolerations: []
 
 affinity: {}
 
-
 Release:
   Time:
     Seconds: 60
