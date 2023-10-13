@@ -67,9 +67,8 @@ jobs:
       - name: Upgrade Helm Chart
         run: |
           helm upgrade --install ${{ vars.DOCKER_IMAGE_NAME }} helm-chart/ \
-          --namespace ${{ vars.KUBE_NAMESPACE }} \
+          --namespace pagopa \
           -f helm-chart/environments/values-${{ inputs.env }}.yaml \
           --set image.tag=${{ github.sha }} \
           --set image.repository=${{ steps.login-ecr.outputs.registry }}/${{ vars.DOCKER_IMAGE_NAME }} \
-          --set serviceAccount.name=${{ vars.DOCKER_IMAGE_NAME }} \
-          --set serviceAccount.namespace=${{ vars.KUBE_NAMESPACE }} 
+          --set serviceAccount.name=${{ vars.DOCKER_IMAGE_NAME }} 
