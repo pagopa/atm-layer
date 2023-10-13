@@ -1,4 +1,4 @@
-name: Manual workflow
+name: Manual build and deploy
 
 on:
   workflow_dispatch:
@@ -70,7 +70,8 @@ jobs:
           --namespace ${{ vars.KUBE_NAMESPACE }} \
           -f helm-chart/environments/values-${{ inputs.env }}.yaml \
           --set image.tag=${{ github.sha }} \
-          --set image.repository=${{ steps.login-ecr.outputs.registry }}/${{ vars.DOCKER_IMAGE_NAME}} \
-          --set serviceAccount.name=${{ vars.DOCKER_IMAGE_NAME}} \
+          --set image.repository=${{ steps.login-ecr.outputs.registry }}/${{ vars.DOCKER_IMAGE_NAME }} \
+          --set serviceAccount.name=${{ vars.DOCKER_IMAGE_NAME }} \
           --set serviceAccount.namespace=${{ vars.KUBE_NAMESPACE }} \
-          --set ingress.hosts[0].paths[0].path=/${{ vars.DOCKER_IMAGE_NAME}}/
+          --set ingress.hosts[0].paths[0].path=/${{ vars.DOCKER_IMAGE_NAME }}/ \
+          --set "ingress.annotations.alb\.ingress\.kubernetes\.io/load-balancer-name=${{ vars.ALB }}"
