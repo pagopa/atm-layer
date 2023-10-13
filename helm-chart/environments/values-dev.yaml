@@ -53,7 +53,7 @@ ingress:
   hosts:
     - host: chart-example.local
       paths:
-        - path: /helloworld/
+        - path: /microservice5/
           pathType: Prefix
   tls: []
   #  - secretName: chart-example-tls
