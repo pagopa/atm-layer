@@ -16,12 +16,23 @@ spec:
         App: {{ .Values.serviceAccount.name }}
         force-recreate: {{ randAlphaNum 5 | quote }}
     spec:
+      volumes:
+      - name: secrets-store-inline
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "pagopa-rds-aws-secrets"
       containers:
         - name: {{ .Values.serviceAccount.name }}
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           ports:
             - containerPort: {{ .Values.service.port }}
           imagePullPolicy: Always
+          volumeMounts:
+          - name: secrets-store-inline
+            mountPath: "/mnt/secrets-store"
+            readOnly: true
 
   strategy:
     type: Recreate
