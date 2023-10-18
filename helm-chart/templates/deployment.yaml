@@ -16,6 +16,7 @@ spec:
         App: {{ .Values.serviceAccount.name }}
         force-recreate: {{ randAlphaNum 5 | quote }}
     spec:
+      serviceAccountName: {{ include "chart-1.serviceAccountName" . }}
       volumes:
       - name: secrets-store-inline
         csi:
