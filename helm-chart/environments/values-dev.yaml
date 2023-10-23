@@ -48,7 +48,7 @@ service:
   port: 8080
 
 ingress:
-  enabled: false
+  enabled: true
   name: pagopa-dev-atm-layer-helloworld
   className: ""
   annotations: 
