@@ -14,6 +14,8 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+namespace: pagopa
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
@@ -23,7 +25,6 @@ serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: pagopa-dev-atm-layer-helloworld
-  namespace: pagopa
 
 podAnnotations: {}
 
@@ -40,11 +41,9 @@ securityContext: {}
 
 deployment:
   name: pagopa-dev-atm-layer-helloworld
-  namespace: pagopa
 
 service:
   name: pagopa-dev-atm-layer-helloworld
-  namespace: pagopa
   type: NodePort
   port: 8080
 
