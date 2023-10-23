@@ -5,6 +5,10 @@ metadata:
   namespace: {{ .Values.serviceAccount.namespace }}
   labels:
     App: {{ .Values.serviceAccount.name }}
+  annotations:
+    reloader.stakater.com/auto: "true"
+    secret.reloader.stakater.com/reload: prova-aws-secrets
+
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -23,9 +27,20 @@ spec:
           driver: secrets-store.csi.k8s.io
           readOnly: true
           volumeAttributes:
-            secretProviderClass: "pagopa-rds-aws-secrets"
+            secretProviderClass: "prova-aws-secrets"
       containers:
         - name: {{ .Values.serviceAccount.name }}
+          env:
+            - name: key1
+              valueFrom:
+                secretKeyRef:
+                  name: prova-aws-secrets
+                  key: test
+            - name: key2
+              valueFrom:
+                secretKeyRef:
+                  name: prova-aws-secrets
+                  key: provo
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           ports:
             - containerPort: {{ .Values.service.port }}

@@ -19,7 +19,7 @@ serviceAccount:
   create: true
   # Annotations to add to the service account
   annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::043745846978:role/eksctl-pagopa-dev-atm-layer-eks-addon-iamser-Role1-VE0GJKIDOHRB
+    eks.amazonaws.com/role-arn: arn:aws:iam::00000000000:role/pagopa-dev-atm-layer-xxxxxx-serviceaccount-role
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: xxxxx
