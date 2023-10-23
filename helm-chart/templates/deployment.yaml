@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.serviceAccount.name }}
-  namespace: {{ .Values.serviceAccount.namespace }}
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.deployment.namespace }}
   labels:
-    App: {{ .Values.serviceAccount.name }}
+    App: {{ .Values.deployment.name }}
   annotations:
     reloader.stakater.com/auto: "true"
     secret.reloader.stakater.com/reload: prova-aws-secrets
@@ -13,11 +13,11 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      App: {{ .Values.serviceAccount.name }}
+      App: {{ .Values.deployment.name }}
   template:
     metadata:
       labels:
-        App: {{ .Values.serviceAccount.name }}
+        App: {{ .Values.deployment.name }}
         force-recreate: {{ randAlphaNum 5 | quote }}
     spec:
       serviceAccountName: {{ include "chart-1.serviceAccountName" . }}
@@ -29,7 +29,7 @@ spec:
           volumeAttributes:
             secretProviderClass: "prova-aws-secrets"
       containers:
-        - name: {{ .Values.serviceAccount.name }}
+        - name: {{ .Values.deployment.name }}
           env:
             - name: key1
               valueFrom:
