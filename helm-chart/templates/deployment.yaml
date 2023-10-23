@@ -1,27 +1,54 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.serviceAccount.name }}
-  namespace: {{ .Values.serviceAccount.namespace }}
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
   labels:
-    App: {{ .Values.serviceAccount.name }}
+    App: {{ .Values.deployment.name }}
+  annotations:
+    reloader.stakater.com/auto: "true"
+    secret.reloader.stakater.com/reload: prova-aws-secrets
+
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      App: {{ .Values.serviceAccount.name }}
+      App: {{ .Values.deployment.name }}
   template:
     metadata:
       labels:
-        App: {{ .Values.serviceAccount.name }}
+        App: {{ .Values.deployment.name }}
         force-recreate: {{ randAlphaNum 5 | quote }}
     spec:
+      serviceAccountName: {{ include "chart-1.serviceAccountName" . }}
+      volumes:
+      - name: secrets-store-inline
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "prova-aws-secrets"
       containers:
-        - name: {{ .Values.serviceAccount.name }}
+        - name: {{ .Values.deployment.name }}
+          env:
+            - name: key1
+              valueFrom:
+                secretKeyRef:
+                  name: prova-aws-secrets
+                  key: test
+            - name: key2
+              valueFrom:
+                secretKeyRef:
+                  name: prova-aws-secrets
+                  key: provo
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           ports:
             - containerPort: {{ .Values.service.port }}
           imagePullPolicy: Always
+          volumeMounts:
+          - name: secrets-store-inline
+            mountPath: "/mnt/secrets-store"
+            readOnly: true
 
   strategy:
     type: Recreate
