@@ -7,7 +7,7 @@ metadata:
     App: {{ .Values.deployment.name }}
   annotations:
     reloader.stakater.com/auto: "true"
-    secret.reloader.stakater.com/reload: prova-aws-secrets
+    secret.reloader.stakater.com/reload: prova-aws-secrets-db, prova-aws-secrets-webuser
 
 spec:
   replicas: {{ .Values.replicaCount }}
@@ -25,28 +25,47 @@ spec:
       - name: secrets-store-inline
         csi:
           driver: secrets-store.csi.k8s.io
-          readOnly: true
+          readOnly: true 
           volumeAttributes:
-            secretProviderClass: "prova-aws-secrets"
+            secretProviderClass: prova-aws-secrets-db
+      - name: secrets-store-inline-2
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true 
+          volumeAttributes:
+            secretProviderClass: prova-aws-secrets-webuser
       containers:
         - name: {{ .Values.deployment.name }}
           env:
             - name: key1
               valueFrom:
                 secretKeyRef:
-                  name: prova-aws-secrets
-                  key: test
+                  name: prova-aws-secrets-db
+                  key: DB_USERNAME
             - name: key2
               valueFrom:
                 secretKeyRef:
-                  name: prova-aws-secrets
-                  key: provo
+                  name: prova-aws-secrets-db
+                  key: DB_PASSWORD
+            - name: web1
+              valueFrom:
+                secretKeyRef:
+                  name: prova-aws-secrets-webuser
+                  key: WEB_USER
+            - name: web2
+              valueFrom:
+                secretKeyRef:
+                  name: prova-aws-secrets-webuser
+                  key: WEB_PASSWORD
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           ports:
             - containerPort: {{ .Values.service.port }}
           imagePullPolicy: Always
           volumeMounts:
           - name: secrets-store-inline
+            mountPath: "/mnt/secrets-store"
+            readOnly: true
+          - name: secrets-store-inline-2
             mountPath: "/mnt/secrets-store"
             readOnly: true
 
