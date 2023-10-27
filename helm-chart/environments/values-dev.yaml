@@ -58,6 +58,7 @@ database:
 
 webuser:
   credentialsSecretName: "prova-aws-secrets-camunda-webuser"
+  credentialsSecretKeys:
     username: WEB_USER
     password: WEB_PASSWORD
 
