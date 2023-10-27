@@ -22,13 +22,7 @@ spec:
     spec:
       serviceAccountName: {{ include "chart-1.serviceAccountName" . }}
       volumes:
-      - name: secrets-store-inline
-        csi:
-          driver: secrets-store.csi.k8s.io
-          readOnly: true 
-          volumeAttributes:
-            secretProviderClass: {{ .Values.secretProviderClass.name }}
-      - name: secrets-store-inline-2
+      - name: secrets-store-inline-1
         csi:
           driver: secrets-store.csi.k8s.io
           readOnly: true 
@@ -62,11 +56,8 @@ spec:
             - containerPort: {{ .Values.service.port }}
           imagePullPolicy: Always
           volumeMounts:
-          - name: secrets-store-inline
+          - name: secrets-store-inline-1
             mountPath: "/mnt/secrets-store/1"
-            readOnly: true
-          - name: secrets-store-inline-2
-            mountPath: "/mnt/secrets-store/2"
             readOnly: true
 
   strategy:
