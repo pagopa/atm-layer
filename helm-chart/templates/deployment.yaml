@@ -28,12 +28,12 @@ spec:
           readOnly: true 
           volumeAttributes:
             secretProviderClass: {{ .Values.secretProviderClass.name }}
-      # - name: secrets-store-inline-2
-      #   csi:
-      #     driver: secrets-store.csi.k8s.io
-      #     readOnly: true 
-      #     volumeAttributes:
-      #       secretProviderClass: {{ .Values.secretProviderClass.name }}
+      - name: secrets-store-inline-2
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true 
+          volumeAttributes:
+            secretProviderClass: {{ .Values.secretProviderClass.name }}
       containers:
         - name: {{ .Values.deployment.name }}
           env:
@@ -65,9 +65,9 @@ spec:
           - name: secrets-store-inline
             mountPath: "/mnt/secrets-store"
             readOnly: true
-          # - name: secrets-store-inline-2
-          #   mountPath: "/mnt/secrets-store"
-          #   readOnly: true
+          - name: secrets-store-inline-2
+            mountPath: "/mnt/secrets-store"
+            readOnly: true
 
   strategy:
     type: Recreate

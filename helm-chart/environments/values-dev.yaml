@@ -11,7 +11,7 @@ image:
   tag: latest
 
 secretProviderClass: 
-  name: prova-aws-secrets-db
+  name: atm-layer-helloworld-secrets
 
 imagePullSecrets: []
 nameOverride: ""
