@@ -28,35 +28,35 @@ spec:
           readOnly: true 
           volumeAttributes:
             secretProviderClass: {{ .Values.secretProviderClass.name }}
-      - name: secrets-store-inline-2
-        csi:
-          driver: secrets-store.csi.k8s.io
-          readOnly: true 
-          volumeAttributes:
-            secretProviderClass: {{ .Values.secretProviderClass.name }}
+      # - name: secrets-store-inline-2
+      #   csi:
+      #     driver: secrets-store.csi.k8s.io
+      #     readOnly: true 
+      #     volumeAttributes:
+      #       secretProviderClass: {{ .Values.secretProviderClass.name }}
       containers:
         - name: {{ .Values.deployment.name }}
           env:
-            - name: key1
+            - name: DATABASE_WEB_USER
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.database.credentialsSecretName }}
-                  key: DB_USERNAME
-            - name: key2
+                  key: {{ .Values.database.credentialsSecretKeys.username }}
+            - name: DATABASE_WEB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.database.credentialsSecretName }}
-                  key: DB_PASSWORD
-            - name: web1
+                  key: {{ .Values.database.credentialsSecretKeys.password }}
+            - name: CAMUNDA_WEB_USER
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.webuser.credentialsSecretName }}
-                  key: WEB_USER
-            - name: web2
+                  key: {{ .Values.webUser.credentialsSecretKeys.username }}
+            - name: CAMUNDA_WEB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.webuser.credentialsSecretName }}
-                  key: WEB_PASSWORD
+                  key: {{ .Values.webUser.credentialsSecretKeys.password }}
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           ports:
             - containerPort: {{ .Values.service.port }}
@@ -65,9 +65,9 @@ spec:
           - name: secrets-store-inline
             mountPath: "/mnt/secrets-store"
             readOnly: true
-          - name: secrets-store-inline-2
-            mountPath: "/mnt/secrets-store"
-            readOnly: true
+          # - name: secrets-store-inline-2
+          #   mountPath: "/mnt/secrets-store"
+          #   readOnly: true
 
   strategy:
     type: Recreate
