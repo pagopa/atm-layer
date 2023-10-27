@@ -28,7 +28,6 @@ jobs:
 
       - name: Install npm
         run: |
-          apt install npm  
           npm install --save-dev semantic-release
 
       - name: Semantic Release
