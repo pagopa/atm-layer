@@ -63,10 +63,10 @@ spec:
           imagePullPolicy: Always
           volumeMounts:
           - name: secrets-store-inline
-            mountPath: "/mnt/secrets-store"
+            mountPath: "/mnt/secrets-store/1"
             readOnly: true
           - name: secrets-store-inline-2
-            mountPath: "/mnt/secrets-store"
+            mountPath: "/mnt/secrets-store/2"
             readOnly: true
 
   strategy:
