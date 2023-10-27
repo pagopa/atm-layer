@@ -51,12 +51,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.webuser.credentialsSecretName }}
-                  key: {{ .Values.webUser.credentialsSecretKeys.username }}
+                  key: {{ .Values.webuser.credentialsSecretKeys.username }}
             - name: CAMUNDA_WEB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.webuser.credentialsSecretName }}
-                  key: {{ .Values.webUser.credentialsSecretKeys.password }}
+                  key: {{ .Values.webuser.credentialsSecretKeys.password }}
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           ports:
             - containerPort: {{ .Values.service.port }}
