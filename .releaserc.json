@@ -2,17 +2,7 @@
     "branches": ["main", "fix/helm", "secrets"],
     "ci": false,
     "plugins": [
-      [
-        "@semantic-release/commit-analyzer",
-        {
-          "preset": "angular",
-          "releaseRules": [
-            { "type": "breaking", "release": "major" },
-            { "type": "major", "release": "major" }
-          ]
-        }
-      ],
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/github"
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator"
     ]
   }

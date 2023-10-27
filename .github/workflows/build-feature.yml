@@ -30,7 +30,6 @@ jobs:
         uses: cycjimmy/semantic-release-action@bdd914ff2423e2792c73475f11e8da603182f32d
         with:
           semantic_version: 18.0.0
-          repositoryUrl: "https://github.com/pagopa/atm-layer"
           extra_plugins: |
             @semantic-release/release-notes-generator@10.0.3
             @semantic-release/git@10.0.1
