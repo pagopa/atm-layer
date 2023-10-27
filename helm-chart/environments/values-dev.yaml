@@ -10,6 +10,9 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: latest
 
+secretProviderClass: 
+  name: prova-aws-secrets-db
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
@@ -46,6 +49,17 @@ service:
   name: pagopa-dev-atm-layer-helloworld
   type: NodePort
   port: 8080
+
+database:
+  credentialsSecretName: prova-aws-secrets-db
+  credentialsSecretKeys:
+    username: DB_USERNAME
+    password: DB_PASSWORD
+
+webuser:
+  credentialsSecretName: prova-aws-secrets-webuser
+    username: WEB_USER
+    password: WEB_PASSWORD
 
 ingress:
   enabled: true

@@ -27,35 +27,35 @@ spec:
           driver: secrets-store.csi.k8s.io
           readOnly: true 
           volumeAttributes:
-            secretProviderClass: prova-aws-secrets-db
+            secretProviderClass: {{ .Values.secretProviderClass.name }}
       - name: secrets-store-inline-2
         csi:
           driver: secrets-store.csi.k8s.io
           readOnly: true 
           volumeAttributes:
-            secretProviderClass: prova-aws-secrets-webuser
+            secretProviderClass: {{ .Values.secretProviderClass.name }}
       containers:
         - name: {{ .Values.deployment.name }}
           env:
             - name: key1
               valueFrom:
                 secretKeyRef:
-                  name: prova-aws-secrets-db
+                  name: {{ .Values.database.credentialsSecretName }}
                   key: DB_USERNAME
             - name: key2
               valueFrom:
                 secretKeyRef:
-                  name: prova-aws-secrets-db
+                  name: {{ .Values.database.credentialsSecretName }}
                   key: DB_PASSWORD
             - name: web1
               valueFrom:
                 secretKeyRef:
-                  name: prova-aws-secrets-webuser
+                  name: {{ .Values.webuser.credentialsSecretName }}
                   key: WEB_USER
             - name: web2
               valueFrom:
                 secretKeyRef:
-                  name: prova-aws-secrets-webuser
+                  name: {{ .Values.webuser.credentialsSecretName }}
                   key: WEB_PASSWORD
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           ports:
