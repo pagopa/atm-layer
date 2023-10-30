@@ -9,9 +9,9 @@ on:
         required: true
         default: dev
         options:
-          - dev
-          - uat
-          - prod
+        - dev
+        - uat
+        - prod
       release:
         description: 'Which release to deploy.'
         type: string
@@ -39,7 +39,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
+        
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838
         with:
