@@ -10,19 +10,24 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: latest
 
+secretProviderClass: 
+  name: atm-layer-helloworld-secrets
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+
+namespace: pagopa
 
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
   # Annotations to add to the service account
-  annotations: {}
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::00000000000:role/pagopa-dev-atm-layer-xxxxxx-serviceaccount-role
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: xxxxx
-  namespace: pagopa
+  name: pagopa-dev-atm-layer-helloworld
 
 podAnnotations: {}
 
@@ -37,12 +42,29 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
+deployment:
+  name: pagopa-dev-atm-layer-helloworld
+
 service:
+  name: pagopa-dev-atm-layer-helloworld
   type: NodePort
   port: 8080
 
+database:
+  credentialsSecretName: "prova-aws-secrets-database"
+  credentialsSecretKeys:
+    username: DB_USERNAME
+    password: DB_PASSWORD
+
+webuser:
+  credentialsSecretName: "prova-aws-secrets-camunda-webuser"
+  credentialsSecretKeys:
+    username: WEB_USER
+    password: WEB_PASSWORD
+
 ingress:
-  enabled: false
+  enabled: true
+  name: pagopa-dev-atm-layer-helloworld
   className: ""
   annotations: 
     kubernetes.io/ingress.class: "alb"
@@ -51,7 +73,7 @@ ingress:
     alb.ingress.kubernetes.io/load-balancer-name: "pagopa-dev-atm-layer-alb-int"
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTP": 8080}]'
   hosts:
-    - host: chart-example.local
+    - host:
       paths:
         - path: /helloworld/
           pathType: Prefix

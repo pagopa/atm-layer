@@ -1,27 +1,64 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.serviceAccount.name }}
-  namespace: {{ .Values.serviceAccount.namespace }}
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
   labels:
-    App: {{ .Values.serviceAccount.name }}
+    App: {{ .Values.deployment.name }}
+  annotations:
+    reloader.stakater.com/auto: "true"
+    secret.reloader.stakater.com/reload: prova-aws-secrets-db, prova-aws-secrets-webuser
+
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      App: {{ .Values.serviceAccount.name }}
+      App: {{ .Values.deployment.name }}
   template:
     metadata:
       labels:
-        App: {{ .Values.serviceAccount.name }}
+        App: {{ .Values.deployment.name }}
         force-recreate: {{ randAlphaNum 5 | quote }}
     spec:
+      serviceAccountName: {{ include "chart-1.serviceAccountName" . }}
+      volumes:
+      - name: secrets-store-inline-1
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true 
+          volumeAttributes:
+            secretProviderClass: {{ .Values.secretProviderClass.name }}
       containers:
-        - name: {{ .Values.serviceAccount.name }}
+        - name: {{ .Values.deployment.name }}
+          env:
+            - name: DATABASE_WEB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.credentialsSecretName }}
+                  key: {{ .Values.database.credentialsSecretKeys.username }}
+            - name: DATABASE_WEB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.credentialsSecretName }}
+                  key: {{ .Values.database.credentialsSecretKeys.password }}
+            - name: CAMUNDA_WEB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.webuser.credentialsSecretName }}
+                  key: {{ .Values.webuser.credentialsSecretKeys.username }}
+            - name: CAMUNDA_WEB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.webuser.credentialsSecretName }}
+                  key: {{ .Values.webuser.credentialsSecretKeys.password }}
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           ports:
             - containerPort: {{ .Values.service.port }}
           imagePullPolicy: Always
+          volumeMounts:
+          - name: secrets-store-inline-1
+            mountPath: "/mnt/secrets-store/1"
+            readOnly: true
 
   strategy:
     type: Recreate
