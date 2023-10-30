@@ -26,24 +26,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Semantic Release
-        uses: cycjimmy/semantic-release-action@bdd914ff2423e2792c73475f11e8da603182f32d
-        with:
-          semantic_version: 18.0.0
-          branches: |
-           [
-            '+([0-9])?(.{+([0-9]),x}).x',
-            'main',
-            {
-              name: 'secrets',
-              prerelease: true
-            }
-            ]
-          extra_plugins: |
-            @semantic-release/release-notes-generator@10.0.3
-            @semantic-release/git@10.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Semantic Release
+      #   uses: cycjimmy/semantic-release-action@bdd914ff2423e2792c73475f11e8da603182f32d
+      #   with:
+      #     semantic_version: 18.0.0
+      #     branches: |
+      #      [
+      #       '+([0-9])?(.{+([0-9]),x}).x',
+      #       'main',
+      #       {
+      #         name: 'secrets',
+      #         prerelease: true
+      #       }
+      #       ]
+      #     extra_plugins: |
+      #       @semantic-release/release-notes-generator@10.0.3
+      #       @semantic-release/git@10.0.1
+      #   env:
+      #     GITHUB_TOKEN: {{ secrets.GITHUB_TOKEN }}
 
       - name: Create Release
         id: create_release
@@ -51,8 +51,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v1.1.1-secrets.1
-          release_name: Release v1.1.1-secrets.1
+          tag_name: v1.0.0-secrets.1
+          release_name: Release v1.0.0-secrets.1
           draft: false
           prerelease: false
   
