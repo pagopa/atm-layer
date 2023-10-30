@@ -70,11 +70,11 @@ jobs:
       #   with:
       #     files: '' # Non specificare alcun file
       #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     GITHUB_TOKEN: {{ secrets.GITHUB_TOKEN }}
         
       # - name: Extract Release Versions
       #   id: extract_versions
       #   run: |
-      #     echo "::set-output name=versions::$(echo '${{ steps.get_releases.outputs.releases }}' | jq -r '.[].tag_name')"
+      #     echo "::set-output name=versions::$(echo '{{ steps.get_releases.outputs.releases }}' | jq -r '.[].tag_name')"
       #   shell: bash
         

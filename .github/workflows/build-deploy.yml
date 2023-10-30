@@ -50,13 +50,14 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build, tag, and push docker image to Amazon ECR
-        env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
-          IMAGE_TAG: ${{ inputs.release }}
-        run: |
-          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+      # - name: Build, tag, and push docker image to Amazon ECR
+      #   env:
+      #     REGISTRY: {{ steps.login-ecr.outputs.registry }}
+      #     REPOSITORY: {{ vars.DOCKER_IMAGE_NAME}}
+      #     IMAGE_TAG: {{ inputs.release }}
+      #   run: |
+      #     docker build -f src/main/docker/Dockerfile.native -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+      #     docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
       - name: Update Kubernetes Config
         run: |
