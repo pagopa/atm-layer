@@ -60,7 +60,7 @@ jobs:
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
-          IMAGE_TAG: ${{ steps.semantic-release.outputs.new_release_version }}
+          IMAGE_TAG: "v${{ steps.semantic-release.outputs.new_release_version }}"
         run: |
           docker build -f src/main/docker/Dockerfile.native -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
