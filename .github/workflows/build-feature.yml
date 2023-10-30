@@ -1,17 +1,50 @@
-name: Create Release from Prerelease
+name: Build everytime push or merge
 
 on:
   push:
-    tags:
-      - 'v1.1.0-secrets.1'
+    branches:
+      - '**'        # matches every branch
+
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  id-token: write   # This is required for requesting the JWT
+  contents: write    # This is required for actions/checkout
 
 jobs:
-  create_release:
+  build:
+    strategy:
+      matrix:
+        environment: [dev]
+    name: "build"
     runs-on: ubuntu-latest
+    environment: ${{ matrix.environment }}
 
     steps:
-      - name: Check out code
+      - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Semantic Release
+        uses: cycjimmy/semantic-release-action@bdd914ff2423e2792c73475f11e8da603182f32d
+        with:
+          semantic_version: 18.0.0
+          branches: |
+           [
+            '+([0-9])?(.{+([0-9]),x}).x',
+            'main',
+            'secrets',
+            {
+              name: 'secrets',
+              prerelease: true
+            }
+            ]
+          extra_plugins: |
+            @semantic-release/release-notes-generator@10.0.3
+            @semantic-release/git@10.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Release
         id: create_release
@@ -23,3 +56,4 @@ jobs:
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
+  
