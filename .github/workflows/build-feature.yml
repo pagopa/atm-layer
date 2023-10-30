@@ -35,10 +35,6 @@ jobs:
             '+([0-9])?(.{+([0-9]),x}).x',
             'main',
             {
-              name: 'fix/helm',
-              prerelease: true
-            },
-            {
               name: 'secrets',
               prerelease: true
             }
