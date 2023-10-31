@@ -36,7 +36,7 @@ jobs:
             '+([0-9])?(.{+([0-9]),x}).x',
             'main',
             {
-              name: 'optimize/semantic-release',
+              name: 'semantic-release',
               prerelease: true
             }
             ]
