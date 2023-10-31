@@ -56,7 +56,7 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
   
-      - name: Build docker imag
+      - name: Build docker image
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
