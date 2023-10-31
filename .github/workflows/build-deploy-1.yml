@@ -1,0 +1,95 @@
+name: Manual build and deploy 1
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        description: 'Which environment to update.'
+        type: choice
+        required: true
+        default: dev
+        options:
+        - dev
+        - uat
+        - prod
+
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  id-token: write   # This is required for requesting the JWT
+  contents: write    # This is required for actions/checkout
+
+jobs:
+  manual-build:
+    if: github.event_name == 'workflow_dispatch'
+    strategy:
+      matrix:
+        environment: ["${{ inputs.env }}"]
+
+    name: "manual-build"
+    runs-on: ubuntu-latest
+    environment: ${{ matrix.environment }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838
+        with:
+          role-to-assume: ${{ secrets.IAM_ROLE }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Semantic Release
+        id: semantic-release
+        uses: cycjimmy/semantic-release-action@bdd914ff2423e2792c73475f11e8da603182f32d
+        with:
+          semantic_version: 18.0.0
+          branches: |
+            [
+            '+([0-9])?(.{+([0-9]),x}).x',
+            'main',
+            {
+              name: 'semantic-release',
+              prerelease: true
+            }
+            ]
+          extra_plugins: |
+            @semantic-release/release-notes-generator@10.0.3
+            @semantic-release/git@10.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push docker image on ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
+          IMAGE_TAG: "v${{ steps.semantic-release.outputs.new_release_version }}"
+        run: |
+          docker build -f src/main/docker/Dockerfile.native -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+
+      - name: Update Kubernetes Config
+        run: |
+          aws eks --region ${{ vars.AWS_REGION }} update-kubeconfig --name pagopa-dev-atm-layer-eks
+
+      - name: Install Helm
+        run: |
+          curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+          chmod 700 get_helm.sh
+          ./get_helm.sh
+
+      - name: Upgrade Helm Chart
+        run: |
+          helm upgrade --install ${{ vars.DOCKER_IMAGE_NAME }} helm-chart/ \
+          --namespace pagopa \
+          -f helm-chart/environments/values-${{ inputs.env }}.yaml \
+          --set image.tag="v${{ steps.semantic-release.outputs.new_release_version }}" \
+          --set image.repository=${{ steps.login-ecr.outputs.registry }}/${{ vars.DOCKER_IMAGE_NAME }} \
+          --set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=${{ secrets.SERVICEACCOUNT_IAM_ROLE }}
