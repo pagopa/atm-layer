@@ -75,21 +75,21 @@ jobs:
           docker build -f src/main/docker/Dockerfile.native -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
-      - name: Update Kubernetes Config
-        run: |
-          aws eks --region ${{ vars.AWS_REGION }} update-kubeconfig --name pagopa-dev-atm-layer-eks
+      # - name: Update Kubernetes Config
+      #   run: |
+      #     aws eks --region {{ vars.AWS_REGION }} update-kubeconfig --name pagopa-{{ inputs.env }}-atm-layer-eks
 
-      - name: Install Helm
-        run: |
-          curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-          chmod 700 get_helm.sh
-          ./get_helm.sh
+      # - name: Install Helm
+      #   run: |
+      #     curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+      #     chmod 700 get_helm.sh
+      #     ./get_helm.sh
 
-      - name: Upgrade Helm Chart
-        run: |
-          helm upgrade --install ${{ vars.DOCKER_IMAGE_NAME }} helm-chart/ \
-          --namespace pagopa \
-          -f helm-chart/environments/values-${{ inputs.env }}.yaml \
-          --set image.tag="v${{ steps.semantic-release.outputs.new_release_version }}" \
-          --set image.repository=${{ steps.login-ecr.outputs.registry }}/${{ vars.DOCKER_IMAGE_NAME }} \
-          --set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=${{ secrets.SERVICEACCOUNT_IAM_ROLE }}
+      # - name: Upgrade Helm Chart
+      #   run: |
+      #     helm upgrade --install {{ vars.DOCKER_IMAGE_NAME }} helm-chart/ \
+      #     --namespace pagopa \
+      #     -f helm-chart/environments/values-{{ inputs.env }}.yaml \
+      #     --set image.tag="v{{ steps.semantic-release.outputs.new_release_version }}" \
+      #     --set image.repository={{ steps.login-ecr.outputs.registry }}/{{ vars.DOCKER_IMAGE_NAME }} \
+      #     --set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"={{ secrets.SERVICEACCOUNT_IAM_ROLE }}
