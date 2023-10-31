@@ -23,7 +23,7 @@ jobs:
     environment: ${{ matrix.environment }}
 
     steps:
-      - name: Checkout codes
+      - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Semantic Release
