@@ -1,5 +1,8 @@
 {
-    "branches": ["+([0-9])?(.{+([0-9]),x}).x"],
+    "branches": ["+([0-9])?(.{+([0-9]),x}).x", "main",{
+      "name": "*",
+      "prerelease": true
+    }],
     "ci": false,
     "plugins": [
       [
