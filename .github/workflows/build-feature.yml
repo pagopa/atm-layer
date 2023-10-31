@@ -37,7 +37,7 @@ jobs:
             'main',
             {
               name: '*',
-              prerelease: 'snap'
+              prerelease: true
             }
             ]
           extra_plugins: |
