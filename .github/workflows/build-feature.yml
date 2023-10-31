@@ -31,15 +31,6 @@ jobs:
         uses: cycjimmy/semantic-release-action@bdd914ff2423e2792c73475f11e8da603182f32d
         with:
           semantic_version: 18.0.0
-          branches: |
-            [
-            '+([0-9])?(.{+([0-9]),x}).x',
-            'main',
-            {
-              name: '*',
-              prerelease: true
-            }
-            ]
           extra_plugins: |
             @semantic-release/release-notes-generator@10.0.3
             @semantic-release/git@10.0.1
