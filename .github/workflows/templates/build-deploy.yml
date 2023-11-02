@@ -62,7 +62,7 @@ jobs:
         with:
           role-to-assume: ${{ secrets.IAM_ROLE }}
           aws-region: ${{ vars.AWS_REGION }}
-
+ 
       - name: Login to dev Amazon ECR
         id: login-ecr-dev
         uses: aws-actions/amazon-ecr-login@v2
