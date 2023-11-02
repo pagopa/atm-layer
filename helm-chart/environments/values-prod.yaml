@@ -12,6 +12,7 @@ image:
 
 secretProviderClass: 
   name: atm-layer-helloworld-secrets
+  env: prod
 
 imagePullSecrets: []
 nameOverride: ""
