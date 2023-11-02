@@ -48,7 +48,7 @@ jobs:
         run: |
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
-          git commit -m "${{ inputs.commit }}: ${{ github.sha }}"
+          git commit --allow-empty -m "${{ inputs.commit }}: ${{ github.sha }}"
           git push
 
       # - name: Configure AWS Credentials
