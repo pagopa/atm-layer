@@ -17,13 +17,13 @@ permissions:
   contents: write    # This is required for actions/checkout
 
 jobs:
-  manual-build:
+  manual-promote-release-in-uat:
     if: github.event_name == 'workflow_dispatch'
     strategy:
       matrix:
         environment: [dev]
 
-    name: "manual-build"
+    name: "manual-promote-release-in-uat"
     runs-on: ubuntu-latest
     environment: ${{ matrix.environment }}
 

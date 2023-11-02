@@ -1,5 +1,5 @@
 {
-    "branches": ["+([0-9])?(.{+([0-9]),x}).x", "test-release",{
+    "branches": ["+([0-9])?(.{+([0-9]),x}).x", "test-release", "uat", "main",{
       "name": "*",
       "prerelease": true
     }],
