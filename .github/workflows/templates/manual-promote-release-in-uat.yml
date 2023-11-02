@@ -1,4 +1,4 @@
-name: Manual build and deploy 1
+name: Manual promote release in uat
 
 on:
   workflow_dispatch:

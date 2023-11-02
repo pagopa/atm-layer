@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       env:
-        description: 'Which environment to update.'
+        description: 'Environment:'
         type: choice
         required: true
         default: dev
@@ -13,7 +13,7 @@ on:
         - uat
         - prod
       release:
-        description: 'Which release to deploy.'
+        description: 'Which pre-release/release to deploy:'
         type: string
         required: true
 
