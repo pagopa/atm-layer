@@ -72,12 +72,13 @@ jobs:
 
       - name: Push docker image in uat ECR
         env:
-          REGISTRY: ${{ steps.login-ecr-uat.outputs.registry }}
+          UAT_REGISTRY: ${{ steps.login-ecr-uat.outputs.registry }}
+          DEV_REGISTRY: ${{ steps.login-ecr-dev.outputs.registry }}
           UAT_REPOSITORY: ${{ vars.UAT_DOCKER_IMAGE_NAME}}
           DEV_REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
           UAT_IMAGE_TAG: "v${{ steps.semantic-release.outputs.new_release_version }}"
           DEV_IMAGE_TAG: ${{ inputs.release }}
         run: |
-          docker tag $REGISTRY/$DEV_REPOSITORY:$DEV_IMAGE_TAG $REGISTRY/$UAT_REPOSITORY:$UAT_IMAGE_TAG
-          docker push $REGISTRY/$UAT_REPOSITORY:$UAT_IMAGE_TAG
+          docker tag $DEV_REGISTRY/$DEV_REPOSITORY:$DEV_IMAGE_TAG $UAT_REGISTRY/$UAT_REPOSITORY:$UAT_IMAGE_TAG
+          docker push $UAT_REGISTRY/$UAT_REPOSITORY:$UAT_IMAGE_TAG
 
