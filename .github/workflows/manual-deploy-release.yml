@@ -26,13 +26,13 @@ permissions:
   contents: write    # This is required for actions/checkout
 
 jobs:
-  manual-build:
+  manual-deploy-release:
     if: github.event_name == 'workflow_dispatch'
     strategy:
       matrix:
         environment: ["${{ inputs.env }}"]
 
-    name: "manual-build"
+    name: "manual-deploy-release"
     runs-on: ubuntu-latest
     environment: ${{ matrix.environment }}
 
