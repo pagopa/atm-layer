@@ -58,7 +58,7 @@ jobs:
           REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
           DEV_IMAGE_TAG: ${{ inputs.release }}
         run: |
-          docker pull $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          docker pull $REGISTRY/$REPOSITORY:$DEV_IMAGE_TAG
 
       - name: Configure uat AWS Credentials
         uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838
@@ -72,11 +72,13 @@ jobs:
 
       - name: Push docker image in uat ECR
         env:
-          REGISTRY: ${{ steps.login-ecr-uat.outputs.registry }}
-          REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
+          UAT_REGISTRY: ${{ steps.login-ecr-uat.outputs.registry }}
+          DEV_REGISTRY: ${{ steps.login-ecr-dev.outputs.registry }}
+          UAT_REPOSITORY: ${{ vars.UAT_DOCKER_IMAGE_NAME}}
+          DEV_REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
           UAT_IMAGE_TAG: "v${{ steps.semantic-release.outputs.new_release_version }}"
           DEV_IMAGE_TAG: ${{ inputs.release }}
         run: |
-          docker tag $REGISTRY/$REPOSITORY:$DEV_IMAGE_TAG $REGISTRY/$REPOSITORY:$UAT_IMAGE_TAG
-          docker push $REGISTRY/$REPOSITORY:$UAT_IMAGE_TAG
+          docker tag $DEV_REGISTRY/$DEV_REPOSITORY:$DEV_IMAGE_TAG $UAT_REGISTRY/$UAT_REPOSITORY:$UAT_IMAGE_TAG
+          docker push $UAT_REGISTRY/$UAT_REPOSITORY:$UAT_IMAGE_TAG
 
