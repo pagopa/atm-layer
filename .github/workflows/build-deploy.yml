@@ -41,7 +41,7 @@ jobs:
     environment: ${{ matrix.environment }}
 
     steps:
-      - name: Checkout code
+      - name: Checkout cod
         uses: actions/checkout@v2
 
       # - name: Commit with "fix:" prefix
