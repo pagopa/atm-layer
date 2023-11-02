@@ -44,6 +44,9 @@ securityContext: {}
 
 deployment:
   name: pagopa-dev-atm-layer-helloworld
+  annotations:
+    reloader.stakater.com/auto: "true"
+    secret.reloader.stakater.com/reload: prova-aws-secrets-database, prova-aws-secrets-camunda-webuser
 
 service:
   name: pagopa-dev-atm-layer-helloworld
