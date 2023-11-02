@@ -44,21 +44,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Commit with "fix:" prefix
-        run: |
-          git config user.name "GitHub Action"
-          git config user.email "action@github.com"
-          git commit --allow-empty -m "${{ inputs.commit }}: ${{ github.sha }}"
-          git push
+      # - name: Commit with "fix:" prefix
+      #   run: |
+      #     git config user.name "GitHub Action"
+      #     git config user.email "action@github.com"
+      #     git commit --allow-empty -m "${{ inputs.commit }}: ${{ github.sha }}"
+      #     git push
 
       # - name: Configure AWS Credentials
       #   uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838
       #   with:
       #     role-to-assume: {{ secrets.IAM_ROLE }}
       #     aws-region: {{ vars.AWS_REGION }}
-
-      - name: Checkout code
-        uses: actions/checkout@v2
 
       - name: Semantic Releas
         id: semantic-release
