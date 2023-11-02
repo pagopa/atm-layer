@@ -6,8 +6,7 @@ metadata:
   labels:
     App: {{ .Values.deployment.name }}
   annotations:
-    reloader.stakater.com/auto: "true"
-    secret.reloader.stakater.com/reload: prova-aws-secrets-db, prova-aws-secrets-webuser
+    {{- toYaml .Values.deployment.annotations | nindent 4 }}
 
 spec:
   replicas: {{ .Values.replicaCount }}
@@ -22,7 +21,7 @@ spec:
     spec:
       serviceAccountName: {{ include "chart-1.serviceAccountName" . }}
       volumes:
-      - name: secrets-store-inline-1
+      - name: secrets-store-inline
         csi:
           driver: secrets-store.csi.k8s.io
           readOnly: true 
@@ -56,8 +55,8 @@ spec:
             - containerPort: {{ .Values.service.port }}
           imagePullPolicy: Always
           volumeMounts:
-          - name: secrets-store-inline-1
-            mountPath: "/mnt/secrets-store/1"
+          - name: secrets-store-inline
+            mountPath: "/mnt/secrets-store"
             readOnly: true
 
   strategy:

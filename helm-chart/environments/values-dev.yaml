@@ -78,7 +78,7 @@ ingress:
   hosts:
     - host:
       paths:
-        - path: /helloworld/
+        - path: /helloworld
           pathType: Prefix
   tls: []
   #  - secretName: chart-example-tls
