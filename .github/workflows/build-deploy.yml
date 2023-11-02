@@ -48,7 +48,7 @@ jobs:
         run: |
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
-          git commit --allow-empty -m "${{ inputs.commit }}: ${{ github.sha }}"
+          git commit -m "${{ inputs.commit }}: ${{ github.sha }}"
           git push
 
       # - name: Configure AWS Credentials
@@ -56,6 +56,9 @@ jobs:
       #   with:
       #     role-to-assume: {{ secrets.IAM_ROLE }}
       #     aws-region: {{ vars.AWS_REGION }}
+
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Semantic Release
         id: semantic-release
