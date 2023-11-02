@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       release:
-        description: 'Which pre-release/release to deploy:'
+        description: 'Which pre-release to promote in uat:'
         type: string
         required: true
 
@@ -58,7 +58,7 @@ jobs:
           REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
           DEV_IMAGE_TAG: ${{ inputs.release }}
         run: |
-          docker pull $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          docker pull $REGISTRY/$REPOSITORY:$DEV_IMAGE_TAG
 
       - name: Configure uat AWS Credentials
         uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838

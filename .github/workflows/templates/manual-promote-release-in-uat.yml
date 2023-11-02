@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       release:
-        description: 'Which pre-release/release to deploy:'
+        description: 'Which pre-release to promote in uat:'
         type: string
         required: true
 
