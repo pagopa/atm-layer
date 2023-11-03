@@ -31,6 +31,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         
+      - name: Commit with "${{ inputs.commit }}:" prefix
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git commit --allow-empty -m "${{ inputs.commit }}: ${{ github.sha }}"
+          git push
+
       - name: Semantic Release
         id: semantic-release
         uses: cycjimmy/semantic-release-action@bdd914ff2423e2792c73475f11e8da603182f32d
