@@ -7,7 +7,15 @@ on:
         description: 'Which pre-release to promote in uat:'
         type: string
         required: true
-
+      commit:
+        description: 'Release type:'
+        type: choice
+        required: true
+        default: fix
+        options:
+        - feat
+        - fix
+        
 defaults:
   run:
     shell: bash
@@ -26,7 +34,7 @@ jobs:
     name: "manual-build"
     runs-on: ubuntu-latest
     environment: ${{ matrix.environment }}
-
+ 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
