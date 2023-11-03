@@ -1,4 +1,4 @@
-name: Manual create pre-release
+name: Manual create pre-release from dev
 
 on:
   workflow_dispatch:
@@ -10,8 +10,6 @@ on:
         default: dev
         options:
         - dev
-        - uat
-        - prod
       commit:
         description: 'Pre-release type:'
         type: choice
