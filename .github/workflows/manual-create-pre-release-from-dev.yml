@@ -60,7 +60,7 @@ jobs:
         run: |
           docker build -f src/main/docker/Dockerfile.native -t $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG .
         
-      - name: Commit with "fix:" prefix
+      - name: Commit with "${{ inputs.commit }}:" prefix
         run: |
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
