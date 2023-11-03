@@ -7,14 +7,6 @@ on:
         description: 'Which pre-release to promote in uat:'
         type: string
         required: true
-      commit:
-        description: 'Pre-release type:'
-        type: choice
-        required: true
-        default: fix
-        options:
-        - feat
-        - fix
 
 defaults:
   run:
