@@ -26,7 +26,7 @@ jobs:
     name: "manual-build"
     runs-on: ubuntu-latest
     environment: ${{ matrix.environment }}
-
+ 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
