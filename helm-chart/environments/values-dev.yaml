@@ -55,13 +55,13 @@ service:
   port: 8080
 
 database:
-  credentialsSecretName: "prova-aws-secrets-database"
+  credentialsSecretName: "prova-aws-secrets-databasee"
   credentialsSecretKeys:
     username: DB_USERNAME
     password: DB_PASSWORD
 
 webuser:
-  credentialsSecretName: "prova-aws-secrets-camunda-webuser"
+  credentialsSecretName: "prova-aws-secrets-camunda-webuserr"
   credentialsSecretKeys:
     username: WEB_USER
     password: WEB_PASSWORD
