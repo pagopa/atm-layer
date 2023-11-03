@@ -1,5 +1,8 @@
 {
-    "branches": ["main", "fix/helm", "secrets"],
+    "branches": ["+([0-9])?(.{+([0-9]),x}).x", "uat", "main",{
+      "name": "*",
+      "prerelease": true
+    }],
     "ci": false,
     "plugins": [
       [

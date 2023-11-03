@@ -1,0 +1,97 @@
+name: Manual create pre-release
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        description: 'Environment:'
+        type: choice
+        required: true
+        default: dev
+        options:
+        - dev
+        - uat
+        - prod
+      commit:
+        description: 'Pre-release type:'
+        type: choice
+        required: true
+        default: fix
+        options:
+        - feat
+        - fix
+
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  id-token: write   # This is required for requesting the JWT
+  contents: write    # This is required for actions/checkout
+
+jobs:
+  manual-create-pre-release:
+    if: github.event_name == 'workflow_dispatch'
+    strategy:
+      matrix:
+        environment: ["${{ inputs.env }}"]
+
+    name: "manual-create-pre-release"
+    runs-on: ubuntu-latest
+    environment: ${{ matrix.environment }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838
+        with:
+          role-to-assume: ${{ secrets.IAM_ROLE }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build docker image
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
+          DOCKER_IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -f src/main/docker/Dockerfile.native -t $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG .
+        
+      - name: Commit with "fix:" prefix
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git commit --allow-empty -m "${{ inputs.commit }}: ${{ github.sha }}"
+          git push
+
+      - name: Semantic Release
+        id: semantic-release
+        uses: cycjimmy/semantic-release-action@bdd914ff2423e2792c73475f11e8da603182f32d
+        with:
+          semantic_version: 18.0.0
+          extra_plugins: |
+            @semantic-release/release-notes-generator@10.0.3
+            @semantic-release/git@10.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838
+        with:
+          role-to-assume: ${{ secrets.IAM_ROLE }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Tag and push docker image on ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
+          DOCKER_IMAGE_TAG: ${{ github.sha }}
+          ECR_IMAGE_TAG: "v${{ steps.semantic-release.outputs.new_release_version }}"
+        run: |
+          docker tag $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG $REGISTRY/$REPOSITORY:$ECR_IMAGE_TAG
+          docker push $REGISTRY/$REPOSITORY:$ECR_IMAGE_TAG
