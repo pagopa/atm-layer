@@ -60,9 +60,13 @@ jobs:
         run: |
           docker build -f src/main/docker/Dockerfile.native -t $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG .
         
-      - uses: s4u/maven-settings-action@v2.8.0
+      - name: Create maven settings.xml with credentials
+        uses: whelk-io/maven-settings-xml-action@v2
         with:
-          servers: '[{"id": "github", "username": "${{ github.actor }}", "password": "${{ secrets.GITHUB_TOKEN }}"}]'
+          servers: |
+            [
+              { "id": "github", "username": "${{ github.actor }}", "password": "${{ secrets.GITHUB_TOKEN }}" }
+            ]
 
       - name: Commit with "${{ inputs.commit }}:" prefix
         run: |
