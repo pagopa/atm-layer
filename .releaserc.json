@@ -16,7 +16,6 @@
         }
       ],
       "@semantic-release/release-notes-generator",
-      "@conveyal/maven-semantic-release",
       "@semantic-release/github",
       [
         "@semantic-release/git",
