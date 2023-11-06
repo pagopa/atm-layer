@@ -80,6 +80,30 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      #
+      # Setup the JDK.
+      #
+      - name: Setup the JDK
+        if: steps.semantic.outputs.new_release_published == 'true'
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      #
+      # Update of pom.xml with the new version + Git add + commit + push of the updated pom.xml.
+      #
+      - name: Update of pom.xml with the new version + Git add + commit + push of the updated pom.xml
+        if: steps.semantic-release.outputs.new_release_published == 'true'
+        run: |
+          mvn versions:set -DnewVersion=${{ steps.semantic-release.outputs.new_release_version }} --no-transfer-progress
+          git config user.name "GitHub Workflow"
+          git config user.email "<>"
+          git add pom.xml
+          git commit -m "pom.xml updated with new version ${{ steps.semantic-release.outputs.new_release_version }}"
+          git push origin main
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838
         with:
