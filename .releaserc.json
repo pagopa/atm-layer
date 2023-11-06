@@ -19,11 +19,8 @@
       [
         "@terrestris/maven-semantic-release",
         {
-          "mavenTarget": "deploy",
-          "clean": false,
           "updateSnapshotVersion": true,
-          "settingsPath": "/home/runner/.m2/settings.xml",
-          "processAllModules": true
+          "settingsPath": "/home/runner/.m2/settings.xml"
         }
       ],
       [
