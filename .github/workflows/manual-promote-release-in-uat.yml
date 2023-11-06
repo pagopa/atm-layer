@@ -60,8 +60,8 @@ jobs:
           semantic_version: 19
           extra_plugins: |
             @semantic-release/release-notes-generator@10.0.3
-            @semantic-release/git@10.0.1
             @terrestris/maven-semantic-release@2
+            @semantic-release/git@10
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
