@@ -59,7 +59,16 @@ jobs:
           DOCKER_IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -f src/main/docker/Dockerfile.native -t $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG .
-        
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: Build artifacts
+        run: mvn clean package
+
       - name: Create maven settings.xml with credentials
         uses: whelk-io/maven-settings-xml-action@v2
         with:
