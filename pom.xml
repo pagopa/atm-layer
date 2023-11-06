@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.acme</groupId>
   <artifactId>code-with-quarkus</artifactId>
-  <version>1.1.0-dev.9</version>
+  <version>1.1.0-dev.10</version>
 
   <scm>
     <connection>scm:git:git@github.com:pagopa/atm-layer.git</connection>
