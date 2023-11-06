@@ -88,8 +88,6 @@ jobs:
         run: |
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
-          git pull
-          git add .
           git commit --allow-empty -m "${{ inputs.commit }}: ${{ github.sha }}"
           git push
           npm i -D semantic-release @terrestris/maven-semantic-release
@@ -101,10 +99,20 @@ jobs:
           semantic_version: 19
           extra_plugins: |
             @semantic-release/release-notes-generator@10.0.3
-            @terrestris/maven-semantic-release@2
-            @semantic-release/git@10
+            @semantic-release/git@10.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: STABLE - Update of pom.xml with the new version
+        if: steps.semantic-release.outputs.new_release_published == 'true'
+        run: |
+          ${{ runner.temp }}/maven/bin/mvn versions:set -DnewVersion=${{ steps.semantic-release.outputs.new_release_version }} -s ${{ runner.temp }}/settings.xml --no-transfer-progress
+          git config user.name "GitHub Workflow"
+          git config user.email "<>"
+          git pull
+          git add pom.xml
+          git commit -m "pom.xml updated with new version ${{ steps.semantic-release.outputs.new_release_version }}"
+          git push
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838
