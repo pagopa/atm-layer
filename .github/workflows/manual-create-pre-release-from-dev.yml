@@ -68,12 +68,13 @@ jobs:
           git add .
           git commit --allow-empty -m "${{ inputs.commit }}: ${{ github.sha }}"
           git push
+          npm i -D semantic-release @terrestris/maven-semantic-release
 
       - name: Semantic Release
         id: semantic-release
         uses: cycjimmy/semantic-release-action@bdd914ff2423e2792c73475f11e8da603182f32d
         with:
-          semantic_version: 18.0.0
+          semantic_version: 19
           extra_plugins: |
             @semantic-release/release-notes-generator@10.0.3
             @semantic-release/git@10.0.1
