@@ -10,7 +10,7 @@
     <url>https://github.com/pagopa/atm-layer</url>
   </repository>
 </distributionManagement>
-  <version>1.1.0-dev.6</version>
+  <version>1.1.0-dev.7</version>
   <properties>
     <compiler-plugin.version>3.11.0</compiler-plugin.version>
     <maven.compiler.release>11</maven.compiler.release>
