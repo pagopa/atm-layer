@@ -39,9 +39,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         
-      - uses: s4u/maven-settings-action@v2.8.0
+      - name: Create maven settings.xml with credentials
+        uses: whelk-io/maven-settings-xml-action@v2
         with:
-          servers: '[{"id": "github", "username": "${{ github.actor }}", "password": "${{ secrets.GITHUB_TOKEN }}"}]'
+          servers: |
+            [
+              { "id": "github", "username": "${{ github.actor }}", "password": "${{ secrets.GITHUB_TOKEN }}" }
+            ]
                   
       - name: Commit with "${{ inputs.commit }}:" prefix
         run: |
