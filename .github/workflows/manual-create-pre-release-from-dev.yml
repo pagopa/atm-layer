@@ -10,14 +10,14 @@ on:
         default: dev
         options:
         - dev
-      # commit:
-      #   description: 'Pre-release type:'
-      #   type: choice
-      #   required: true
-      #   default: fix
-      #   options:
-      #   - feat
-      #   - fix
+      commit:
+        description: 'Pre-release type:'
+        type: choice
+        required: true
+        default: fix
+        options:
+        - feat
+        - fix
  
 defaults:
   run:
@@ -52,20 +52,20 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      # - name: Build docker image
-      #   env:
-      #     REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-      #     REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
-      #     DOCKER_IMAGE_TAG: ${{ github.sha }}
-      #   run: |
-      #     docker build -f src/main/docker/Dockerfile.native -t $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG .
+      - name: Build docker image
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
+          DOCKER_IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -f src/main/docker/Dockerfile.native -t $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG .
 
-      # - name: Commit with "${{ inputs.commit }}:" prefix
-      #   run: |
-      #     git config user.name "GitHub Action"
-      #     git config user.email "action@github.com"
-      #     git commit --allow-empty -m "${{ inputs.commit }}: ${{ github.sha }}"
-      #     git push
+      - name: Commit with "${{ inputs.commit }}:" prefix
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git commit --allow-empty -m "${{ inputs.commit }}: ${{ github.sha }}"
+          git push
 
       - name: Semantic Release
         id: semantic-release
@@ -96,6 +96,7 @@ jobs:
           aws-region: ${{ vars.AWS_REGION }}
 
       - name: Tag and push docker image on ECR
+        if: steps.semantic-release.outputs.new_release_published == 'true'
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
