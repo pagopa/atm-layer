@@ -21,8 +21,8 @@ defaults:
     shell: bash
 
 permissions:
-  id-token: write   # This is required for requesting the JWT
-  contents: write    # This is required for actions/checkout
+  id-token: write
+  contents: write
 
 jobs:
   manual-build:
@@ -38,15 +38,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        
-      - name: Create maven settings.xml with credentials
-        uses: whelk-io/maven-settings-xml-action@v2
-        with:
-          servers: |
-            [
-              { "id": "github", "username": "${{ github.actor }}", "password": "${{ secrets.GITHUB_TOKEN }}" }
-            ]
-                  
+                          
       - name: Commit with "${{ inputs.commit }}:" prefix
         run: |
           git config user.name "GitHub Action"
@@ -108,6 +100,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Push docker image in uat ECR
+        if: steps.semantic-release.outputs.new_release_published == 'true'
         env:
           UAT_REGISTRY: ${{ steps.login-ecr-uat.outputs.registry }}
           DEV_REGISTRY: ${{ steps.login-ecr-dev.outputs.registry }}
