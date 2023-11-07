@@ -10,22 +10,22 @@ on:
         default: dev
         options:
         - dev
-      commit:
-        description: 'Pre-release type:'
-        type: choice
-        required: true
-        default: fix
-        options:
-        - feat
-        - fix
+      # commit:
+      #   description: 'Pre-release type:'
+      #   type: choice
+      #   required: true
+      #   default: fix
+      #   options:
+      #   - feat
+      #   - fix
  
 defaults:
   run:
     shell: bash
 
 permissions:
-  id-token: write   # This is required for requesting the JWT
-  contents: write    # This is required for actions/checkout
+  id-token: write
+  contents: write
 
 jobs:
   manual-create-pre-release:
@@ -52,20 +52,20 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build docker image
-        env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
-          DOCKER_IMAGE_TAG: ${{ github.sha }}
-        run: |
-          docker build -f src/main/docker/Dockerfile.native -t $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG .
+      # - name: Build docker image
+      #   env:
+      #     REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+      #     REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
+      #     DOCKER_IMAGE_TAG: ${{ github.sha }}
+      #   run: |
+      #     docker build -f src/main/docker/Dockerfile.native -t $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG .
 
-      - name: Commit with "${{ inputs.commit }}:" prefix
-        run: |
-          git config user.name "GitHub Action"
-          git config user.email "action@github.com"
-          git commit --allow-empty -m "${{ inputs.commit }}: ${{ github.sha }}"
-          git push
+      # - name: Commit with "${{ inputs.commit }}:" prefix
+      #   run: |
+      #     git config user.name "GitHub Action"
+      #     git config user.email "action@github.com"
+      #     git commit --allow-empty -m "${{ inputs.commit }}: ${{ github.sha }}"
+      #     git push
 
       - name: Semantic Release
         id: semantic-release
@@ -78,21 +78,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # #
-      # # Setup the JDK.
-      # #
-      # - name: Setup the JDK
-      #   if: steps.semantic-release.outputs.new_release_published == 'true'
-      #   uses: actions/setup-java@v3
-      #   with:
-      #     java-version: '17'
-      #     distribution: 'temurin'
-      #     cache: maven
-
-      #
-      # Update of pom.xml with the new version + Git add + commit + push of the updated pom.xml.
-      #
-      - name: Update of pom.xml with the new version + Git add + commit + push of the updated pom.xml
+      - name: Update file pom.xml with the new version
         if: steps.semantic-release.outputs.new_release_published == 'true'
         run: |
           mvn versions:set -DnewVersion=${{ steps.semantic-release.outputs.new_release_version }} --no-transfer-progress

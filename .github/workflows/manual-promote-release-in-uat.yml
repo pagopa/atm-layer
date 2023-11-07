@@ -64,10 +64,20 @@ jobs:
           semantic_version: 19
           extra_plugins: |
             @semantic-release/release-notes-generator@10.0.3
-            @terrestris/maven-semantic-release@2
             @semantic-release/git@10.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update file pom.xml with the new version
+        if: steps.semantic-release.outputs.new_release_published == 'true'
+        run: |
+          mvn versions:set -DnewVersion=${{ steps.semantic-release.outputs.new_release_version }} --no-transfer-progress
+          git pull
+          git config user.name "GitHub Workflow"
+          git config user.email "<>"
+          git add pom.xml
+          git commit -m "pom.xml updated with new version ${{ steps.semantic-release.outputs.new_release_version }}"
+          git push
 
       - name: Configure dev AWS Credentials
         uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838
