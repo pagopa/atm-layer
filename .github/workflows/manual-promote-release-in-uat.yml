@@ -21,8 +21,8 @@ defaults:
     shell: bash
 
 permissions:
-  id-token: write   # This is required for requesting the JWT
-  contents: write    # This is required for actions/checkout
+  id-token: write
+  contents: write
 
 jobs:
   manual-build:
@@ -38,7 +38,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        
+                          
       - name: Commit with "${{ inputs.commit }}:" prefix
         run: |
           git config user.name "GitHub Action"
@@ -47,17 +47,29 @@ jobs:
           git add .
           git commit --allow-empty -m "${{ inputs.commit }}: ${{ github.sha }}"
           git push
+          npm i -D semantic-release @terrestris/maven-semantic-release
 
       - name: Semantic Release
         id: semantic-release
         uses: cycjimmy/semantic-release-action@bdd914ff2423e2792c73475f11e8da603182f32d
         with:
-          semantic_version: 18.0.0
+          semantic_version: 19
           extra_plugins: |
             @semantic-release/release-notes-generator@10.0.3
             @semantic-release/git@10.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update file pom.xml with the new version
+        if: steps.semantic-release.outputs.new_release_published == 'true'
+        run: |
+          mvn versions:set -DnewVersion=${{ steps.semantic-release.outputs.new_release_version }} --no-transfer-progress
+          git pull
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git add pom.xml
+          git commit -m "pom.xml updated with new version ${{ steps.semantic-release.outputs.new_release_version }}"
+          git push
 
       - name: Configure dev AWS Credentials
         uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838
@@ -88,6 +100,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Push docker image in uat ECR
+        if: steps.semantic-release.outputs.new_release_published == 'true'
         env:
           UAT_REGISTRY: ${{ steps.login-ecr-uat.outputs.registry }}
           DEV_REGISTRY: ${{ steps.login-ecr-dev.outputs.registry }}

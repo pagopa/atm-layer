@@ -65,7 +65,7 @@ jobs:
           UAT_REGISTRY: ${{ steps.login-ecr-uat.outputs.registry }}
           PROD_REPOSITORY: ${{ vars.PROD_DOCKER_IMAGE_NAME}}
           UAT_REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
-          PROD_IMAGE_TAG: "v${{ steps.semantic-release.outputs.new_release_version }}"
+          PROD_IMAGE_TAG: ${{ inputs.release }}
           UAT_IMAGE_TAG: ${{ inputs.release }}
         run: |
           docker tag $UAT_REGISTRY/$UAT_REPOSITORY:$UAT_IMAGE_TAG $PROD_REGISTRY/$PROD_REPOSITORY:$PROD_IMAGE_TAG
