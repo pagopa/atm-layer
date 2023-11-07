@@ -73,8 +73,8 @@ jobs:
         run: |
           mvn versions:set -DnewVersion=${{ steps.semantic-release.outputs.new_release_version }} --no-transfer-progress
           git pull
-          git config user.name "GitHub Workflow"
-          git config user.email "<>"
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
           git add pom.xml
           git commit -m "pom.xml updated with new version ${{ steps.semantic-release.outputs.new_release_version }}"
           git push
