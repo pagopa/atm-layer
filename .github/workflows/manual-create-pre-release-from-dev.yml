@@ -112,14 +112,14 @@ jobs:
           git commit -m "pom.xml updated with new version ${{ steps.semantic-release.outputs.new_release_version }}"
           git push
 
-      - name: Bump new version
+      - name: Update file Chart.yaml with the new version
         if: steps.semantic-release.outputs.new_release_published == 'true'
         run: |
           yq -i ".version = \"${{ steps.semantic-release.outputs.new_release_version }}\"" "helm-chart/Chart.yaml"
           git pull
           git add "helm-chart/Chart.yaml"
-          git commit -m "Bump microservice chart version ${{ steps.semantic-release.outputs.new_release_version }}"
-          git push -u origin main
+          git commit -m "Chart.yaml updated with new version ${{ steps.semantic-release.outputs.new_release_version }}"
+          git push
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838
