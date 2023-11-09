@@ -94,10 +94,10 @@ jobs:
       - name: Update file Chart.yaml with the new version
         if: steps.semantic-release.outputs.new_release_published == 'true'
         run: |
-          yq -i ".version = \"${{ steps.semantic-release.outputs.new_release_version }}\"" "helm-chart/Chart.yaml"
+          yq -i ".version = \"v${{ steps.semantic-release.outputs.new_release_version }}\"" "helm-chart/Chart.yaml"
           git pull
           git add "helm-chart/Chart.yaml"
-          git commit -m "Chart.yaml updated with new version ${{ steps.semantic-release.outputs.new_release_version }}"
+          git commit -m "Chart.yaml updated with new version v${{ steps.semantic-release.outputs.new_release_version }}"
           git push
 
       - name: Configure dev AWS Credentials
