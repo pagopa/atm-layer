@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "atm-layer.name" -}}
+{{- define "atm-layer-helloworld.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "atm-layer.fullname" -}}
+{{- define "atm-layer-helloworld.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "atm-layer.chart" -}}
+{{- define "atm-layer-helloworld.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "atm-layer.labels" -}}
-helm.sh/chart: {{ include "atm-layer.chart" . }}
-{{ include "atm-layer.selectorLabels" . }}
+{{- define "atm-layer-helloworld.labels" -}}
+helm.sh/chart: {{ include "atm-layer-helloworld.chart" . }}
+{{ include "atm-layer-helloworld.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "atm-layer.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "atm-layer.name" . }}
+{{- define "atm-layer-helloworld.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "atm-layer-helloworld.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "atm-layer.serviceAccountName" -}}
+{{- define "atm-layer-helloworld.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "atm-layer.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "atm-layer-helloworld.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
