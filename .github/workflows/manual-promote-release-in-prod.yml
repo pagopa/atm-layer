@@ -18,7 +18,7 @@ permissions:
 
 jobs:
   manual-promote-release-in-prod:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
     strategy:
       matrix:
         environment: [uat]
