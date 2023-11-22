@@ -18,7 +18,7 @@ permissions:
 
 jobs:
   manual-deploy-release:
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/dev' && github.ref == 'refs/heads/uat' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/uat' || github.ref == 'refs/heads/main'
     strategy:
       matrix:
         environment: ["${{ github.ref == 'refs/heads/dev' && 'dev' || github.ref == 'refs/heads/uat' && 'uat' || github.ref == 'refs/heads/main' && 'prod' }}"]
