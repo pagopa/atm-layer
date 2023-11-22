@@ -30,8 +30,7 @@ jobs:
     if: github.event_name == 'workflow_dispatch'
     strategy:
       matrix:
-        environment: |
-          ${{ github.head_ref == 'main' && 'prod' || github.head_ref == 'dev' && 'dev' || github.head_ref == 'uat' && 'uat' || github.head_ref }}
+        environment: ${{ github.head_ref }}
 
     name: "manual-deploy-release"
     runs-on: ubuntu-latest
