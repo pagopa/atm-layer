@@ -18,6 +18,7 @@ on:
         options:
         - feat
         - fix
+        - major
  
 defaults:
   run:
@@ -59,7 +60,7 @@ jobs:
 
       - name: Test and Integration tests
         run: |
-          mvn package -Pnative -Dquarkus.application.name=atm-layer -Dquarkus.profile=prod ##############
+          mvn test -Dquarkus.package.type=native -Dquarkus.application.name=atm-layer-model -Dquarkus.profile=prod ##########
 
       - name: Create Status check based on postman results
         id: process-postman
@@ -67,7 +68,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           results-file: src/test/resources/integration-test/output/result.json
-          report-name: 'Postman ${{ github.run_number }}'
+          report-name: 'Postman create pre-release: ${{ github.run_number }}'
           create-status-check: true
           create-pr-comment: true
           update-comment-if-one-exists: true

@@ -3,15 +3,15 @@ name: Manual deploy release
 on:
   workflow_dispatch:
     inputs:
-      env:
-        description: 'Environment:'
-        type: choice
-        required: true
-        default: dev
-        options:
-        - dev
-        - uat
-        - prod
+      # env:
+      #   description: 'Environment:'
+      #   type: choice
+      #   required: true
+      #   default: dev
+      #   options:
+      #   - dev
+      #   - uat
+      #   - prod
       release:
         description: 'Which pre-release/release to deploy:'
         type: string
@@ -30,7 +30,8 @@ jobs:
     if: github.event_name == 'workflow_dispatch'
     strategy:
       matrix:
-        environment: ["${{ inputs.env }}"]
+        environment: |
+          ${{ github.head_ref == 'main' && 'prod' || github.head_ref == 'dev' && 'dev' || github.head_ref == 'uat' && 'uat' || github.head_ref }}
 
     name: "manual-deploy-release"
     runs-on: ubuntu-latest
