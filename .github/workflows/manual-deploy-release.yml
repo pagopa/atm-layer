@@ -34,7 +34,7 @@ jobs:
 
     name: "manual-deploy-release"
     runs-on: ubuntu-latest
-    environment: ${{ matrix.environment }}
+    environment: ${{ github.ref == 'refs/heads/dev' && 'dev' || github.ref == 'refs/heads/uat' && 'uat' || github.ref == 'refs/heads/main' && 'prod' }}
 
     steps:
       - name: Checkout code
