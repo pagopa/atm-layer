@@ -3,15 +3,6 @@ name: Manual deploy release
 on:
   workflow_dispatch:
     inputs:
-      # env:
-      #   description: 'Environment:'
-      #   type: choice
-      #   required: true
-      #   default: dev
-      #   options:
-      #   - dev
-      #   - uat
-      #   - prod
       release:
         description: 'Which pre-release/release to deploy:'
         type: string
