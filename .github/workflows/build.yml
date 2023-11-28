@@ -1,6 +1,9 @@
 name: Build everytime push or merge
 
-on: push
+on:
+  push:
+    branches:
+      - '**'        # matches every branch
 
 defaults:
   run:
