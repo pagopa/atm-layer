@@ -60,14 +60,14 @@ spec:
           - name: secrets-store-inline
             mountPath: "/mnt/secrets-store"
             readOnly: true
-          # {{- if .Values.autoscaling.enabled -}}
           resources:
+            {{- if .Values.autoscaling.enabled -}}
             limits:
               cpu: {{ .Values.autoscaling.cpuLimits }}
               memory: {{ .Values.autoscaling.memoryLimits }}
             requests:
               cpu: {{ .Values.autoscaling.cpuRequest }}
               memory: {{ .Values.autoscaling.memoryRequests }}
-          # {{- end }}
+            {{- end }}
   strategy:
     type: Recreate
