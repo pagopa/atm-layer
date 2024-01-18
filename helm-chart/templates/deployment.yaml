@@ -61,13 +61,13 @@ spec:
             mountPath: "/mnt/secrets-store"
             readOnly: true
           resources:
-            {{- if .Values.autoscaling.enabled -}}
+          {{- if .Values.autoscaling.enabled -}}
             limits:
               cpu: {{ .Values.autoscaling.cpuLimits }}
               memory: {{ .Values.autoscaling.memoryLimits }}
             requests:
               cpu: {{ .Values.autoscaling.cpuRequest }}
               memory: {{ .Values.autoscaling.memoryRequests }}
-            {{- end }}
+          {{- end }}
   strategy:
     type: Recreate
