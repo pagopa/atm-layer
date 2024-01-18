@@ -110,8 +110,8 @@ autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 2
-  targetCPUUtilizationPercentage: 1
-  targetMemoryUtilizationPercentage: 1
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
   memoryLimits: 1000Mi
   memoryRequests: 100Mi
   cpuLimits: 500m
