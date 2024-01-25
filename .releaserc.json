@@ -3,7 +3,8 @@
     "name": "dev", 
     "prerelease": true
   },{
-    "name": "hotfix/**",
+    "channel": "hotfix",
+    "name": "hotfix/*",
     "prerelease": true
   }],
   "ci": false,
