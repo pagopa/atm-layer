@@ -18,10 +18,10 @@ permissions:
 
 jobs:
   manual-deploy-release:
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/uat' || github.ref == 'refs/heads/main'
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/uat' || startsWith(github.ref, 'refs/heads/hotfix/') || github.ref == 'refs/heads/main' 
     strategy:
-      matrix:
-        environment: ["${{ github.ref == 'refs/heads/dev' && 'dev' || github.ref == 'refs/heads/uat' && 'uat' || github.ref == 'refs/heads/main' && 'prod' }}"]
+      matrix: #pre-prod
+        environment: ["${{ github.ref == 'refs/heads/dev' && 'dev' || github.ref == 'refs/heads/uat' && 'uat' || startsWith(github.ref, 'refs/heads/hotfix/') && 'uat' || github.ref == 'refs/heads/main' && 'prod' }}"]
 
     name: "manual-deploy-release"
     runs-on: ubuntu-latest
