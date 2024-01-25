@@ -3,7 +3,7 @@
     "name": "dev", 
     "prerelease": true
   },{
-    "name": "+([hH]otfix*)",
+    "name": "+(hotfix*)",
     "prerelease": true
   }],
   "ci": false,
