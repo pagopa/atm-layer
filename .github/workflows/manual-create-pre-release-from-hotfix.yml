@@ -50,7 +50,7 @@ jobs:
           REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
           DOCKER_IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG .
+          docker build -f src/main/docker/Dockerfile.native -t $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG .
 
       - name: Commit with "${{ inputs.commit }}:" prefix
         run: |
