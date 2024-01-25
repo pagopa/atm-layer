@@ -14,7 +14,7 @@ public class GreetingResourceTest {
         given()
           .when().get("/microservice5/")
           .then()
-             .statusCode(200)
+             .statusCode(429)
              .body(is("Hello from RESTEasy Review"));
     }
 

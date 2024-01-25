@@ -1,4 +1,4 @@
-name: Manual create pre-release from dev
+name: Manual create pre-release for hotfix
 
 on:
   workflow_dispatch:
@@ -12,21 +12,19 @@ on:
         - feat
         - fix
         - major
- 
+
 defaults:
   run:
     shell: bash
 
-permissions:
-  id-token: write
-  contents: write
+permissions: write-all
 
 jobs:
   manual-create-pre-release:
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/dev'
+    if: github.event_name == 'workflow_dispatch' && startsWith(github.ref, 'refs/heads/hotfix/')
     strategy:
       matrix:
-        environment: [dev]
+        environment: [uat] #pre-prod
 
     name: "manual-create-pre-release"
     runs-on: ubuntu-latest
@@ -46,13 +44,44 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
+      - name: Setup JDK
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '17'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Test execution
+        run: |
+          mvn test
+
+      - name: JaCoCo Code Coverage Report
+        id: jacoco_reporter
+        uses: PavanMudigonda/jacoco-reporter@v4.9
+        with:
+          coverage_results_path: target/site/jacoco/jacoco.xml
+          coverage_report_name: 'Coverage create pre-release: ${{ github.run_number }}'
+          coverage_report_title: JaCoCo
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          skip_check_run: false
+          minimum_coverage: 90
+          fail_below_threshold: false
+          publish_only_summary: false
+
+      - name: Fail Build if overall coverage is less than 90%
+        if: steps.jacoco_reporter.outputs.coverage_percentage < 90.0 
+        uses: actions/github-script@v6
+        with:
+          script: |
+            core.setFailed('Overall coverage is less than 90%!')
+
       - name: Build docker image
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
           DOCKER_IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -f src/main/docker/Dockerfile.native -t $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG .
+          docker build -t $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG .
 
       - name: Commit with "${{ inputs.commit }}:" prefix
         run: |
