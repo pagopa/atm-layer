@@ -4,7 +4,7 @@
     "prerelease": true
   },{
     "channel": "hotfix",
-    "name": "hotfix/*",
+    "name": "hotfix*",
     "prerelease": true
   }],
   "ci": false,
