@@ -39,13 +39,25 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-                          
+
+      - uses: robinraju/release-downloader@v1.9
+        with:
+          repository: "${{ github.repository.name }}"
+          tag: "${{ inputs.release }}"
+          fileName: "${{ inputs.release }}.zip"
+
+      - name: Unzip tag = ${{ inputs.release }}
+        run: |
+          mkdir ${{ inputs.release }}
+          cd ${{ inputs.release }}
+          unzip ${{ inputs.release }}.zip
+
       - name: Commit with "${{ inputs.commit }}:" prefix
         run: |
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
           git pull
-          git add .
+          git add -N .
           git commit --allow-empty -m "${{ inputs.commit }}: ${{ github.sha }}"
           git push
 
@@ -66,8 +78,8 @@ jobs:
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
           git pull
-          git add .
-          git commit --allow-empty -m "${{ inputs.commit }}: docker-image: v${{ steps.semantic-release-dryrun.outputs.new_release_version }}, chart: v${{ steps.semantic-release-dryrun.outputs.new_release_version }}"
+          git add -N .
+          git commit --allow-empty -m "${{ inputs.commit }}: image: v${{ steps.semantic-release-dryrun.outputs.new_release_version }}"
           git push
 
       - name: Semantic Release
