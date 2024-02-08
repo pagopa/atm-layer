@@ -51,14 +51,15 @@ jobs:
       - uses: robinraju/release-downloader@v1.9
         with:
           repository: "${{ github.repository }}"
+          preRelease: true
           tag: "${{ inputs.release }}"
-          fileName: "*.zip"
-          # extract: true
-          # preRelease: true
+          # fileName: "*.zip"
+          zipBall: true
+          out-file-path: "${{ inputs.release }}"
+          extract: true
 
       - name: Unzip tag = ${{ inputs.release }}
         run: |
-          mkdir ${{ inputs.release }}
           cd ${{ inputs.release }}
           unzip ${{ inputs.release }}.zip
 
