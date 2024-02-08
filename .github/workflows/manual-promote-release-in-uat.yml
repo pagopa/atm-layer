@@ -47,11 +47,10 @@ jobs:
           cut_version=${version:1}
           echo "Cut version: $cut_version"
           echo "::set-output name=cut_version::$cut_version"
-          
+
       - uses: robinraju/release-downloader@v1.8
         with:
           repository: "${{ github.repository }}"
-          preRelease: true
           tag: "${{ inputs.release }}"
           zipBall: true
           out-file-path: "${{ inputs.release }}"
@@ -59,7 +58,7 @@ jobs:
       - name: Unzip tag = ${{ inputs.release }}
         run: |
           cd ${{ inputs.release }}
-          unzip ${{ inputs.release }}.zip
+          unzip ${{ steps.cut_input.outputs.cut_version }}.zip
 
       - name: Commit with "${{ inputs.commit }}:" prefix
         run: |
