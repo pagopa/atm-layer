@@ -52,7 +52,7 @@ jobs:
         with:
           repository: "${{ github.repository }}"
           tag: "${{ inputs.release }}"
-          fileName: "Source code (zip)"
+          zipBall: true
 
       - name: Unzip tag = ${{ inputs.release }}
         run: |
