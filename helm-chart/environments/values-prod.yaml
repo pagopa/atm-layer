@@ -10,7 +10,8 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: latest
 
-secretProviderClass: 
+secretProviderClass:
+  enabled: true
   name: atm-layer-helloworld-secrets
   env: prod
 
