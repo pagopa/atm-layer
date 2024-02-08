@@ -58,7 +58,8 @@ jobs:
       - name: Unzip tag = ${{ inputs.release }}
         run: |
           cd ${{ inputs.release }}
-          unzip ${{ steps.cut_input.outputs.cut_version }}.zip
+          ls
+          unzip atm-layer-${{ steps.cut_input.outputs.cut_version }}.zip
 
       - name: Commit with "${{ inputs.commit }}:" prefix
         run: |
