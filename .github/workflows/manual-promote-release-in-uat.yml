@@ -27,7 +27,7 @@ permissions:
 
 jobs:
   manual-build:
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/dev'
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/uat'
     strategy:
       matrix:
         environment: [dev]
@@ -52,7 +52,8 @@ jobs:
         with:
           repository: "${{ github.repository }}"
           tag: "${{ inputs.release }}"
-          zipBall: true
+          fileName: "atm-layer-${{ steps.cut_input.outputs.cut_version }}.zip"
+          extract: true
 
       - name: Unzip tag = ${{ inputs.release }}
         run: |
