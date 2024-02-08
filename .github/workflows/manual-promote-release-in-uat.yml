@@ -40,11 +40,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Cut version
+        id: cut_input
+        run: |
+          version="${{ inputs.release }}"
+          cut_version=${version:1}
+          echo "Cut version: $cut_version"
+          echo "::set-output name=cut_version::$cut_version"
+          
       - uses: robinraju/release-downloader@v1.9
         with:
           repository: "${{ github.repository }}"
           tag: "${{ inputs.release }}"
-          fileName: "${{ inputs.release }}.zip"
+          fileName: "atm-layer-${{ steps.cut_input.outputs.cut_version }}.zip"
 
       - name: Unzip tag = ${{ inputs.release }}
         run: |
