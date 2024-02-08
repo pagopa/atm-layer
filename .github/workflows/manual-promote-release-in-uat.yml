@@ -59,7 +59,7 @@ jobs:
         run: |
           cd ${{ inputs.release }}
           ls
-          unzip atm-layer-${{ steps.cut_input.outputs.cut_version }}.zip
+          unzip atm-layer-${{ inputs.release }}.zip
 
       - name: Commit with "${{ inputs.commit }}:" prefix
         run: |
