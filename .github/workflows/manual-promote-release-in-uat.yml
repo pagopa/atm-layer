@@ -50,13 +50,16 @@ jobs:
           
       - uses: robinraju/release-downloader@v1.9
         with:
-          repository: "${{ github.repository }}"
+          repository: pagopa/atm-layer
           preRelease: true
-          tag: "${{ inputs.release }}"
-          # fileName: "*.zip"
+          tag: v2.0.0-dev.1
           zipBall: true
-          out-file-path: "${{ inputs.release }}"
+          out-file-path: v2.0.0-dev.1
           extract: true
+          latest: false
+          fileName: "*"
+          tarBall: false
+          github-api-url: https://api.github.com
 
       - name: Unzip tag = ${{ inputs.release }}
         run: |
