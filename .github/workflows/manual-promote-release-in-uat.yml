@@ -42,7 +42,7 @@ jobs:
 
       - uses: robinraju/release-downloader@v1.9
         with:
-          repository: "${{ github.repository.name }}"
+          repository: "${{ github.repository }}"
           tag: "${{ inputs.release }}"
           fileName: "${{ inputs.release }}.zip"
 
