@@ -48,18 +48,13 @@ jobs:
           echo "Cut version: $cut_version"
           echo "::set-output name=cut_version::$cut_version"
           
-      - uses: robinraju/release-downloader@v1.9
+      - uses: robinraju/release-downloader@v1.8
         with:
-          repository: pagopa/atm-layer
+          repository: "${{ github.repository }}"
           preRelease: true
-          tag: v2.0.0-dev.1
+          tag: "${{ inputs.release }}"
           zipBall: true
-          out-file-path: v2.0.0-dev.1
-          extract: true
-          latest: false
-          fileName: "*"
-          tarBall: false
-          github-api-url: https://api.github.com
+          out-file-path: "${{ inputs.release }}"
 
       - name: Unzip tag = ${{ inputs.release }}
         run: |
