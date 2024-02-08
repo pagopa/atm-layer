@@ -27,7 +27,7 @@ permissions:
 
 jobs:
   manual-build:
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/uat'
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/dev'
     strategy:
       matrix:
         environment: [dev]
