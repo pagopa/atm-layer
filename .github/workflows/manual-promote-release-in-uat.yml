@@ -52,8 +52,9 @@ jobs:
         with:
           repository: "${{ github.repository }}"
           tag: "${{ inputs.release }}"
-          fileName: "atm-layer-${{ steps.cut_input.outputs.cut_version }}.zip"
-          extract: true
+          fileName: "*.zip"
+          # extract: true
+          # preRelease: true
 
       - name: Unzip tag = ${{ inputs.release }}
         run: |
