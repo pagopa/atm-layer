@@ -52,7 +52,7 @@ jobs:
         with:
           repository: "${{ github.repository }}"
           tag: "${{ inputs.release }}"
-          fileName: "atm-layer-${{ steps.cut_input.outputs.cut_version }}.zip"
+          fileName: "Source code (zip)"
 
       - name: Unzip tag = ${{ inputs.release }}
         run: |
