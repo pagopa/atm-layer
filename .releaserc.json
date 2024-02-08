@@ -3,9 +3,8 @@
     "name": "dev", 
     "prerelease": true
   },{
-    "channel": "hotfix",
     "name": "hotfix/*",
-    "prerelease": true
+    "prerelease": "hotfix"
   }],
   "ci": false,
   "plugins": [
