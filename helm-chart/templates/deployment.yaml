@@ -23,12 +23,14 @@ spec:
     spec:
       serviceAccountName: {{ include "atm-layer-helloworld.serviceAccountName" . }}
       volumes:
+      {{- if .Values.secretProviderClass.enabled }}
       - name: secrets-store-inline
         csi:
           driver: secrets-store.csi.k8s.io
           readOnly: true 
           volumeAttributes:
             secretProviderClass: {{ .Values.secretProviderClass.name }}
+      {{- end }}
       containers:
         - name: {{ .Values.deployment.name }}
           env:
@@ -57,9 +59,11 @@ spec:
             - containerPort: {{ .Values.service.port }}
           imagePullPolicy: Always
           volumeMounts:
+          {{- if .Values.secretProviderClass.enabled }}
           - name: secrets-store-inline
             mountPath: "/mnt/secrets-store"
             readOnly: true
+          {{- end }}
           {{- if .Values.autoscaling.enabled }}
           resources:
             limits:
