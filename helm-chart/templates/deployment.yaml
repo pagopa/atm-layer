@@ -34,6 +34,8 @@ spec:
       containers:
         - name: {{ .Values.deployment.name }}
           env:
+            - name: TZ
+              value: Europe/Rome
             - name: DATABASE_WEB_USER
               valueFrom:
                 secretKeyRef:
