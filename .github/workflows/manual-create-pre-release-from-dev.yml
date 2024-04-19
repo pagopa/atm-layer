@@ -22,7 +22,7 @@ permissions:
   contents: write
 
 jobs:
-  manual-create-pre-release:
+  build:
     if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/dev'
     strategy:
       matrix:
@@ -95,6 +95,17 @@ jobs:
         run: |
           docker build -f src/main/docker/Dockerfile.native -t $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG .
 
+  manual-create-pre-release:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/dev'
+    strategy:
+      matrix:
+        environment: [dev]
+
+    name: "manual-create-pre-release"
+    runs-on: ubuntu-latest
+    environment: ${{ matrix.environment }}
+
+    steps:
       - name: Commit with "${{ inputs.commit }}:" prefix
         run: |
           git config user.name "GitHub Action"
