@@ -22,48 +22,7 @@ permissions:
   contents: write
 
 jobs:
-  build:
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/dev'
-    strategy:
-      matrix:
-        environment: [dev]
-
-    name: "manual-create-pre-release"
-    runs-on: ubuntu-latest
-    environment: ${{ matrix.environment }}
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838
-        with:
-          role-to-assume: ${{ secrets.IAM_ROLE }}
-          aws-region: ${{ vars.AWS_REGION }}
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Build docker image
-        env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
-          DOCKER_IMAGE_TAG: "latest"
-        run: |
-          docker build -f src/main/docker/Dockerfile.native -t $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG .
-          docker save -o nome_immagine.tar $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG
-          git pull
-          git config user.name "GitHub Action"
-          git config user.email "action@github.com"
-          git add pom.xml
-          git commit --allow-empty -m "saving docker image"
-          git push
-
-
   manual-create-pre-release:
-    needs: build
     if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/dev'
     strategy:
       matrix:
@@ -128,6 +87,14 @@ jobs:
           git commit --allow-empty -m "Chart.yaml updated with new version v${{ steps.semantic-release-dryrun.outputs.new_release_version }}"
           git push
 
+      - name: Build docker image
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
+          DOCKER_IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -f src/main/docker/Dockerfile.native -t $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG .
+
       - name: Commit with "${{ inputs.commit }}:" prefix
         run: |
           git config user.name "GitHub Action"
@@ -148,15 +115,19 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838
+        with:
+          role-to-assume: ${{ secrets.IAM_ROLE }}
+          aws-region: ${{ vars.AWS_REGION }}
+
       - name: Tag and push docker image on ECR
         if: steps.semantic-release.outputs.new_release_published == 'true'
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: ${{ vars.DOCKER_IMAGE_NAME}}
-          DOCKER_IMAGE_TAG: "latest"
+          DOCKER_IMAGE_TAG: ${{ github.sha }}
           ECR_IMAGE_TAG: "v${{ steps.semantic-release.outputs.new_release_version }}"
         run: |
-          git pull
-          docker load -i nome_immagine.tar
           docker tag $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG $REGISTRY/$REPOSITORY:$ECR_IMAGE_TAG
           docker push $REGISTRY/$REPOSITORY:$ECR_IMAGE_TAG
