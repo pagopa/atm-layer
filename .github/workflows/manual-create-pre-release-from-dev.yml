@@ -53,7 +53,7 @@ jobs:
           DOCKER_IMAGE_TAG: "latest"
         run: |
           docker build -f src/main/docker/Dockerfile.native -t $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG .
-          docker save -o nome_immagine.tar $REPOSITORY:$DOCKER_IMAGE_TAG
+          docker save -o nome_immagine.tar $REPOSITORY:$REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG
 
   manual-create-pre-release:
     needs: build
