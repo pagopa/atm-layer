@@ -67,6 +67,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set released version output
+        run: echo "::set-output name=released_version::${{ steps.semantic-release-dryrun.outputs.new_release_version }}"
+
       - name: Update file pom.xml with the new version
         if: steps.semantic-release-dryrun.outputs.new_release_published == 'true'
         run: |
@@ -126,7 +129,7 @@ jobs:
           git config user.email "action@github.com"
           git pull
           git add .
-          git commit --allow-empty -m "${{ inputs.commit }}: docker-image: v${{ steps.semantic-release-dryrun.outputs.new_release_version }}, chart: v${{ steps.semantic-release-dryrun.outputs.new_release_version }}"
+          git commit --allow-empty -m "${{ inputs.commit }}: docker-image: v${{ needs.build.outputs.released_version }}, chart: v${{ needs.build.outputs.released_version }}"
           git push
 
       - name: Semantic Release
