@@ -96,6 +96,7 @@ jobs:
           docker build -f src/main/docker/Dockerfile.native -t $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG .
 
   manual-create-pre-release:
+    needs: build
     if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/dev'
     strategy:
       matrix:
