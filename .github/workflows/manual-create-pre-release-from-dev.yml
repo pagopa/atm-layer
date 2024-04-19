@@ -53,6 +53,7 @@ jobs:
           DOCKER_IMAGE_TAG: "latest"
         run: |
           docker build -f src/main/docker/Dockerfile.native -t $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG .
+          docker save -o nome_immagine.tar $REPOSITORY:$DOCKER_IMAGE_TAG
 
   manual-create-pre-release:
     needs: build
@@ -140,12 +141,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838
-        with:
-          role-to-assume: ${{ secrets.IAM_ROLE }}
-          aws-region: ${{ vars.AWS_REGION }}
-
       - name: Tag and push docker image on ECR
         if: steps.semantic-release.outputs.new_release_published == 'true'
         env:
@@ -154,5 +149,6 @@ jobs:
           DOCKER_IMAGE_TAG: "latest"
           ECR_IMAGE_TAG: "v${{ steps.semantic-release.outputs.new_release_version }}"
         run: |
+          docker load -i nome_immagine.tar
           docker tag $REGISTRY/$REPOSITORY:$DOCKER_IMAGE_TAG $REGISTRY/$REPOSITORY:$ECR_IMAGE_TAG
           docker push $REGISTRY/$REPOSITORY:$ECR_IMAGE_TAG
