@@ -34,6 +34,9 @@ spec:
       containers:
         - name: {{ .Values.deployment.name }}
           env:
+            - name: TZ
+              value: Europe/Rome
+            {{- if .Values.database.credentialsSecretEnabled }}
             - name: DATABASE_WEB_USER
               valueFrom:
                 secretKeyRef:
@@ -44,6 +47,8 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.database.credentialsSecretName }}
                   key: {{ .Values.database.credentialsSecretKeys.password }}
+            {{- end }}
+            {{- if .Values.webuser.credentialsSecretEnabled }}
             - name: CAMUNDA_WEB_USER
               valueFrom:
                 secretKeyRef:
@@ -54,6 +59,7 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.webuser.credentialsSecretName }}
                   key: {{ .Values.webuser.credentialsSecretKeys.password }}
+            {{- end }}
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           ports:
             - containerPort: {{ .Values.service.port }}
