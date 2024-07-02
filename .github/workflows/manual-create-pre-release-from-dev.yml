@@ -40,7 +40,7 @@ jobs:
         id: count-hotfix-branches
         run: |
           MAX_HOTFIX_BRANCHES=1
-          HOTFIX_BRANCH_COUNT=$(git branch -r | grep -c 'origin/hotfix/')
+          HOTFIX_BRANCH_COUNT=$(git fetch -p | git branch -r | grep -c 'origin/hotfix/*')
           echo "Number of hotfix branches: $HOTFIX_BRANCH_COUNT"
           if [ $HOTFIX_BRANCH_COUNT -gt $MAX_HOTFIX_BRANCHES ]; then
             echo "Too many hotfix branches ($HOTFIX_BRANCH_COUNT). Maximum allowed is $MAX_HOTFIX_BRANCHES."
