@@ -36,17 +36,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Count hotfix branches
-        id: count-hotfix-branches
-        run: |
-          MAX_HOTFIX_BRANCHES=1
-          HOTFIX_BRANCH_COUNT=$(git fetch -p | git branch -r | grep -c 'origin/hotfix/*')
-          echo "Number of hotfix branches: $HOTFIX_BRANCH_COUNT"
-          if [ $HOTFIX_BRANCH_COUNT -gt $MAX_HOTFIX_BRANCHES ]; then
-            echo "Too many hotfix branches ($HOTFIX_BRANCH_COUNT). Maximum allowed is $MAX_HOTFIX_BRANCHES."
-            exit 1
-          fi
-
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838
         with:
